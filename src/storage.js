@@ -91,9 +91,7 @@ class RecordStore {
     const baseWhere = Object.entries(baseFields).filter(([key, _value]) => !!params[key])
       .map(([key, value]) => `${value} = '${params[key]}'`)
       .join(' AND ');
-    // each row in the result has ONE variable value, so we OR these
-    // together to collect results matching ANY of the variable values
-    // listed
+
     const varWhere = Object.entries(params)
       .filter(([key, _value]) => !baseFields[key])
       .map((arr) => variableField(...arr))
