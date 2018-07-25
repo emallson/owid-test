@@ -47,9 +47,10 @@ app.post('/importCSV', (req, res) => {
         res.status(400).send(`Unable to process input "${fieldname}": ${err}`);
         sentErr = true;
       })
-      .on('finish', async () => {
+      .on('end', async () => {
         processedFiles += 1;
         if(!sentErr && finished && processedFiles === totalFiles) {
+          console.log(sentErr, finished, processedFiles, totalFiles);
           await store.processQueue(true);
           finalize();
           console.log(`processed file with ${numLines} records`);
