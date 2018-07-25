@@ -1,0 +1,27 @@
+{
+  "name": "owid-filter-test",
+  "version": "0.1.0",
+  "description": "Data filtering test for OWID",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emallson/owid-filter-test.git"
+  },
+  "author": "J. David Smith",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/emallson/owid-filter-test/issues"
+  },
+  "homepage": "https://github.com/emallson/owid-filter-test#readme",
+  "dependencies": {
+    "csv-parse": "^2.5.0",
+    "express": "^4.16.3",
+    "pg": "^7.4.3"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  }
+}
