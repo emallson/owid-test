@@ -79,6 +79,39 @@ class RecordStore {
     }
     await client.query('COMMIT');
   }
+
+  async query(params) {
+    const baseFields = {Country: 'countries.name', Year: 'year'};
+    const variableField = (key, value) => `obj::json->>'${key}' = '${value}'`;
+
+    const baseWhere = Object.entries(baseFields).filter(([key, _value]) => !!params[key])
+      .map(([key, value]) => `${value} = '${params[key]}'`)
+      .join(' AND ');
+    // each row in the result has ONE variable value, so we OR these
+    // together to collect results matching ANY of the variable values
+    // listed
+    const varWhere = Object.entries(params)
+      .filter(([key, _value]) => !baseFields[key])
+      .map((arr) => variableField(...arr))
+      .join(' AND ');
+
+    const innerQuery = `SELECT year, countries.name as country, json_object_agg(variables.name, varValue) as obj
+                       FROM records
+                       JOIN countries ON countries.id = countryId
+                       JOIN variables ON variables.id = varId
+                       ${(baseWhere.length > 0) ? `WHERE ${baseWhere}` : ""}
+                       GROUP BY year, countries.name`;
+
+    let query;
+    if(varWhere.length > 0) {
+      query = `SELECT year, country, obj FROM (${innerQuery}) as agg WHERE ${varWhere}`;
+    } else {
+      query = innerQuery;
+    }
+
+    const { rows } = await this.pool.query(query);
+    return rows.map(({year, country, obj}) => Object.assign({year, country}, obj));
+  }
 }
 
 module.exports = RecordStore;

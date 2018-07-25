@@ -59,6 +59,21 @@ app.post('/importCSV', (req, res) => {
   req.pipe(busboy);
 });
 
+app.get('/filter', async (req, res) => {
+  try {
+    const results = await store.query(req.query);
+
+    res.status(200).send({
+      results: results,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(400).send({
+      err: err
+    });
+  }
+});
+
 const port = process.env.PORT;
 
 app.listen(port, function() {
