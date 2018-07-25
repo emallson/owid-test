@@ -74,12 +74,13 @@ class RecordStore {
         await client.query("INSERT INTO records (countryId, year, varId, varValue) VALUES ($1, $2, $3, $4) ON CONFLICT (countryId, year, varId) DO UPDATE SET varValue = excluded.varValue;", row);
       }
     } catch(err) {
-      console.err(err);
+      console.error(err);
       await client.query('ROLLBACK');
     } finally {
       client.release();
     }
     await client.query('COMMIT');
+    console.log('flushed queue')
   }
 
   async query(params) {
