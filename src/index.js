@@ -22,7 +22,6 @@ app.post('/importCSV', (req, res) => {
   const finalize = () => res.status(200).send("Done.\n");
 
   busboy.on('file', (fieldname, file) => {
-    console.log(arguments);
     totalFiles += 1;
     const parser = csv();
     let varIds = null;
