@@ -53,6 +53,7 @@ class RecordStore {
       }
       const row = [countryId, year, varId, value];
       this._queue.push(row);
+      await this.processQueue();
     }
   }
 
