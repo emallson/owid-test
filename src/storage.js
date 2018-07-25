@@ -8,7 +8,7 @@ class RecordStore {
   constructor(pool, queue_size = 1000) {
     this.pool = pool;
     this._COUNTRIES = {};
-    this.queue_size = 1000;
+    this.queue_size = queue_size;
     this._queue = [];
   }
 
@@ -80,7 +80,7 @@ class RecordStore {
       client.release();
     }
     await client.query('COMMIT');
-    console.log('flushed queue')
+    console.log('flushed queue');
   }
 
   async query(params) {

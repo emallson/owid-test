@@ -25,6 +25,7 @@ app.post('/importCSV', (req, res) => {
     totalFiles += 1;
     const parser = csv();
     let varIds = null;
+    let numLines = 0;
     file.pipe(parser)
       .on('readable', async () => {
         let record;
@@ -32,6 +33,7 @@ app.post('/importCSV', (req, res) => {
           try {
             if(varIds !== null) {
               await store.insert(record, varIds);
+              numLines += 1;
             } else {
               varIds = await store.getVariables(record);
             }
@@ -50,6 +52,7 @@ app.post('/importCSV', (req, res) => {
         if(!sentErr && finished && processedFiles === totalFiles) {
           await store.processQueue(true);
           finalize();
+          console.log(`processed file with ${numLines} records`);
         }
       });
   });
